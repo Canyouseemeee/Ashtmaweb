@@ -94,4 +94,119 @@ class PatientController extends Controller
 
         return redirect('/patient')->with('status','Your add user Success');
     }
+
+    public function viewpatient(Request $request,$id){
+        $mid = Auth::guard('medic')->user()->m_id;
+        $userinfo = DB::table('medic')
+        ->select('*')
+        ->where('m_id', $mid)
+        ->first();
+
+        $patient = Patient::findOrFail($id);
+
+        $find = DB::table('patient')
+        ->select('h_name','d_name')
+        ->join('hospital', 'hospital.h_id', '=', 'patient.h_id')
+        ->join('disease', 'disease.d_id', '=', 'patient.d_id')
+        ->where('patient.hn_id', $patient->hn_id)
+        ->get();
+
+        $hpt = DB::table('hospital')
+            ->select('*')
+            ->get();
+        
+        $disease = DB::table('disease')
+            ->select('*')
+            ->get();
+
+
+        return view('users.patient.viewpatient',
+        compact([
+            'userinfo',
+            'patient',
+            'find',
+            'hpt',
+            'disease'
+        ]));
+
+    }
+
+    public function editpatient(Request $request,$id){
+        $mid = Auth::guard('medic')->user()->m_id;
+        $userinfo = DB::table('medic')
+        ->select('*')
+        ->where('m_id', $mid)
+        ->first();
+
+        $patient = Patient::findOrFail($id);
+
+        $find = DB::table('patient')
+        ->select('h_name','d_name')
+        ->join('hospital', 'hospital.h_id', '=', 'patient.h_id')
+        ->join('disease', 'disease.d_id', '=', 'patient.d_id')
+        ->where('patient.hn_id', $patient->hn_id)
+        ->get();
+
+        $hpt = DB::table('hospital')
+            ->select('*')
+            ->get();
+        
+        $disease = DB::table('disease')
+            ->select('*')
+            ->get();
+
+
+        return view('users.patient.editpatient',
+        compact([
+            'userinfo',
+            'patient',
+            'find',
+            'hpt',
+            'disease'
+        ]));
+
+    }
+
+    public function edit_patient(Request $request,$id){
+        $patient = Patient::find($id);
+
+        // echo $patient->hn_id;
+        $patient->p_tname = $request->input('tname');
+        $patient->p_name = $request->input('name');
+        $patient->p_surname = $request->input('surname');
+        $patient->p_etname = $request->input('etname');
+        $patient->p_ename = $request->input('ename');
+        $patient->p_esurname = $request->input('esurname');
+        $patient->p_gender = $request->input('gender');
+        $patient->p_birthdate = $request->input('birthdate');
+        $patient->p_tel = $request->input('tel');
+        $patient->p_race = $request->input('race');
+        $patient->p_nationality = $request->input('nationality');
+        $patient->p_religion = $request->input('religion');
+        $patient->p_weight = $request->input('weight');
+        $patient->p_height = $request->input('height');
+
+        if ($request->hasFile('Image')) {
+            $filename = $request->Image->getClientOriginalName();
+            $file = time() . '.' . $filename;
+            $patient->p_image = $request->Image->storeAs('imagesprofile', $file, 'public');
+            // dd($file);
+        } else {
+            $patient->p_image = $patient->p_image;
+        }
+
+        $patient->d_id = $request->input('d_id');
+        $patient->p_sysptom = $request->input('sysptom');
+        // $patient->p_passwordcode = Hash::make($request->input('passwordcode'));
+        $patient->p_address = $request->input('address');
+        $patient->h_id = $request->input('h_id');
+        $patient->p_status = 0;
+        $patient->u_id = 1;
+
+           
+        // echo($medic);
+        $patient->update();
+
+        return redirect('/patient')->with('status','Your add user Success');
+    }
 }

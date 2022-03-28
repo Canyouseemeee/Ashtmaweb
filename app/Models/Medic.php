@@ -14,10 +14,9 @@ class Medic extends Authenticatable
 
     protected $table = 'medic';
 
-    public $incrementing = false; 
+    public  $incrementing = false; 
 
     protected $fillable = [
-        'm_id',
         'm_fullname',
         'password',
         'm_position',
@@ -29,4 +28,6 @@ class Medic extends Authenticatable
         'updated_at',
 
     ];
+
+    
 }

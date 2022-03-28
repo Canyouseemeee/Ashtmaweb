@@ -53,7 +53,7 @@
                         @endif
                         <td style="text-align: center;">{{$row->h_name}}</td>
                         <td style="text-align: center;">
-                            <a href="/view_patient/{{$row->hn_id}}" class="btn btn-success">ดูข้อมูล</a>
+                            <a href="/viewpatient/{{$row->hn_id}}" class="btn btn-success">ดูข้อมูล</a>
                         </td>
                     </tr>
                     @endforeach

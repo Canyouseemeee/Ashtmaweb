@@ -4,18 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Medic;
-use Auth;
-use DB;
 
-class DashboardController extends Controller
+class HospitalController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
-    }
-    
     public function index(){
         if(Auth::guard('medic')->check()){
             $mid = Auth::guard('medic')->user()->m_id;
@@ -23,13 +14,15 @@ class DashboardController extends Controller
             ->select('*')
             ->where('m_id', $mid)
             ->first();
-            return view('admin.dashboard',compact('userinfo'));
 
+            $hospital = DB::table('hospital')
+            ->select('*')
+            ->get();
+            
+            return view('admin.hospital.hospital',compact(['userinfo','hospital']));
         }else{
             return redirect('login');
-        }
-        return redirect('login');
+        } 
+        
     }
-
-    
 }

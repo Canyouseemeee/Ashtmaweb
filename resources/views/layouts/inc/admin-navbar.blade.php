@@ -16,12 +16,12 @@
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user fa-fw"></i> {{ $userinfo->m_fullname }} </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
-                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-                        <li><hr class="dropdown-divider" /></li>
+                        <!-- <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        <li><a class="dropdown-item" href="#!">Activity Log</a></li> -->
+                        <!-- <li><hr class="dropdown-divider" /></li> -->
                         <li><a class="dropdown-item" href="{{ url('logout') }}"
                             >
-                            {{ __('Logout') }}
+                            {{ __('ออกจากระบบ') }}
                         </a>
 
                         
@@ -30,7 +30,7 @@
                 
                 <!-- <li class="nav-item dropdown">
                     <a id="navbarDropdown2" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"  aria-expanded="false" >
-                        {{ Auth::guard('medic')->user()->m_fullname }}
+                        
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown2">

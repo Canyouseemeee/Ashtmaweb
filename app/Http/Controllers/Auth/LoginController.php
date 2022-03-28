@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardController;
 use DB;
-
+use Session;
 
 
 
@@ -41,31 +41,41 @@ class LoginController extends Controller
      *
      * @return void
      */
+
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        $this->middleware('guest:medic')->except('logout');
     }
+
 
     public function login(Request $request)
     {
         $mid = $request->input('username');
+        $request['password'] = bcrypt($request->input('password'));
         $credentials = [
             'm_id' => $request->input('username'),
             'password' => $request->input('password')
         ];
+        $val = $request->only('m_id', 'password');
         $userinfo = DB::table('medic')
             ->select('*')
             ->where('m_id', $mid)
             ->first();
+        
 
         if (Auth::guard('medic')->attempt($credentials)) {
             return view("admin.dashboard",compact('userinfo'));
+        }else{
+            dd(Auth::guard('medic')->attempt($credentials));
+            // echo bcrypt($request->input('password'));
+            // return view("admin.dashboard",compact('userinfo'));
         }
-        
+       
     }
 
     public function logout(Request $request) {
-        
+        Session::flush();
         Auth::guard('medic')->logout();
         return redirect('/login');
       }
