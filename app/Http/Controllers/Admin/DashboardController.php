@@ -13,17 +13,13 @@ class DashboardController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('auth');
     }
     
     public function index(){
-        if(Auth::guard('medic')->check()){
-            $mid = Auth::guard('medic')->user()->m_id;
-            $userinfo = DB::table('medic')
-            ->select('*')
-            ->where('m_id', $mid)
-            ->first();
-            return view('admin.dashboard',compact('userinfo'));
+        if(Auth::check()){
+            
+            return view('admin.dashboard');
 
         }else{
             return redirect('login');

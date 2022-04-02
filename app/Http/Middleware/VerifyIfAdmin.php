@@ -16,10 +16,11 @@ class VerifyIfAdmin
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, $userType)
     {
-        if(Auth::guard('medic')->check()){
-            if (Auth::guard('medic')->user()->admin) {
+        if(Auth::check()){
+            if (Auth::user()->admin == $userType) {
+                // abort(403);
                 return $next($request);
             }
             else{
@@ -27,9 +28,6 @@ class VerifyIfAdmin
             }
         }
         
-        // else if(!Auth::guard('medic')->user()->admin){
-        //     return $next($request);
-        // }
         else{
             abort(403);
         }

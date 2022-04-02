@@ -45,7 +45,6 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware('guest:medic')->except('logout');
     }
 
 
@@ -58,25 +57,28 @@ class LoginController extends Controller
             'password' => $request->input('password')
         ];
         $val = $request->only('m_id', 'password');
-        $userinfo = DB::table('medic')
+        $userinfo = DB::table('users')
             ->select('*')
-            ->where('m_id', $mid)
+            ->where('email', $mid)
             ->first();
         
-
-        if (Auth::guard('medic')->attempt($credentials)) {
-            return view("admin.dashboard",compact('userinfo'));
+        if($userinfo->id != null){
+            if (Auth::loginUsingId($userinfo->id, TRUE)) {
+                return view("admin.dashboard",compact('userinfo'));
+            }else{
+                return redirect('/login');
+                // echo bcrypt($request->input('password'));
+                // return view("admin.dashboard",compact('userinfo'));
+            }
         }else{
-            dd(Auth::guard('medic')->attempt($credentials));
-            // echo bcrypt($request->input('password'));
-            // return view("admin.dashboard",compact('userinfo'));
+            return redirect('/login');
         }
        
     }
 
     public function logout(Request $request) {
-        Session::flush();
-        Auth::guard('medic')->logout();
+        
+        Auth::logout();
         return redirect('/login');
       }
 }

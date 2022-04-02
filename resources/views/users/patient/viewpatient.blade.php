@@ -118,8 +118,12 @@
                                     <label for="sysptom" class=" col-form-label text-md-right">{{ $patient->p_sysptom }}</label>
 
                                     &emsp;&emsp;&emsp;                                                                
-                                    <!-- <label for="passwordcode" class=" col-form-label text-md-right">รหัสเข้าถึง : </label>
-                                    <label for="passwordcode" class="col-form-label text-md-right">{{ $patient->p_passwordcode }}</label> -->
+                                    <label for="passwordcode" class=" col-form-label text-md-right">ยา : </label>
+                                    @foreach($medicine as $row)
+                                    @if ($row->me_id === $patient->me_id)
+                                        <label for="me_id" class=" col-form-label text-md-right">{{ $row->me_name }}</label>
+                                    @endif
+                                    @endforeach
                                                           
                                 </div>
                             </div>
@@ -128,10 +132,10 @@
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <label for="h_id" class="col-form-label text-md-right">โรงพยาบาล :</label>
-                                    @foreach($find as $find1)
                                     @foreach($hpt as $row)
-                                    <label for="h_id" class=" col-form-label text-md-right" @if ($row->h_name === $find1->h_name)@endif>{{ $row->h_name }}</label>
-                                    @endforeach
+                                    @if ($row->h_id === $patient->h_id)
+                                        <label for="h_id" class=" col-form-label text-md-right" >{{ $row->h_name }}</label>
+                                    @endif        
                                     @endforeach
                                 </div>
                             </div>

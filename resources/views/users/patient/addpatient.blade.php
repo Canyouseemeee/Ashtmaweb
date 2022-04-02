@@ -195,7 +195,15 @@
                             
                             <br>
                             <div class="form-group row">
-                                <label for="h_id" class="col-sm-1 col-form-label text-md-right">โรงพยาบาล :</label>
+                                <label for="me_id" class="col-sm-1 col-form-label text-md-right">ยา:</label>
+                                <div class="col-md-3">
+                                    <select name="me_id" class="form-control">
+                                    @foreach($medicine as $row)
+                                        <option  value="{{$row->me_id}}">{{$row->me_name}}</option>
+                                    @endforeach
+                                    </select>
+                                </div>
+                                <label for="h_id" class="col-sm-1 col-form-label text-md-right">โรงพยาบาล:</label>
                                 <div class="col-md-6">
                                     <select name="h_id" class="form-control">
                                     @foreach($hpt as $row)

@@ -201,8 +201,20 @@
                             
                             <br>
                             <div class="form-group row">
-                                <div class="col-md-12">
-                                    <label for="h_id" class="col-form-label text-md-right">โรงพยาบาล :</label>
+                                <label for="me_id" class="col-sm-1 col-form-label text-md-right">ยา:</label>
+                                <div class="col-md-3">
+                                    <select name="me_id" class="form-control">
+                                    @foreach($find as $find1)
+                                    @foreach($medicine as $row)
+                                        <option  value="{{$row->me_id}}" @if ($row->me_name === $find1->me_name)
+                                            selected
+                                            @endif>{{$row->me_name}}</option>
+                                    @endforeach
+                                    @endforeach
+                                    </select>
+                                </div>
+                                <label for="h_id" class="col-sm-1 col-form-label text-md-right">โรงพยาบาล:</label>
+                                <div class="col-md-6">
                                     <select name="h_id" class="form-control">
                                         @foreach($find as $find1)
                                         @foreach($hpt as $row)

@@ -11,9 +11,15 @@ use Illuminate\Support\Facades\Hash;
 
 class PatientController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(){
         
-        $mid = Auth::guard('medic')->user()->m_id;
+        $mid = Auth::user()->m_id;
         $userinfo = DB::table('medic')
         ->select('*')
         ->where('m_id', $mid)
@@ -31,11 +37,8 @@ class PatientController extends Controller
 
     public function addpatient(){
         
-        $mid = Auth::guard('medic')->user()->m_id;
-        $userinfo = DB::table('medic')
-        ->select('*')
-        ->where('m_id', $mid)
-        ->first();
+        $mid = Auth::user()->m_id;
+        
 
         $hpt = DB::table('hospital')
             ->select('*')
@@ -44,8 +47,12 @@ class PatientController extends Controller
         $disease = DB::table('disease')
             ->select('*')
             ->get();
+
+        $medicine = DB::table('medicine')
+            ->select('*')
+            ->get();
             
-        return view('users.patient.addpatient',compact(['userinfo','hpt','disease']));
+        return view('users.patient.addpatient',compact(['hpt','disease','medicine']));
         
     }
 
@@ -70,6 +77,7 @@ class PatientController extends Controller
         $patient->p_religion = $request->input('religion');
         $patient->p_weight = $request->input('weight');
         $patient->p_height = $request->input('height');
+        
 
         if ($request->hasFile('Image')) {
             $filename = $request->Image->getClientOriginalName();
@@ -85,6 +93,7 @@ class PatientController extends Controller
         $patient->p_passwordcode = Hash::make($request->input('passwordcode'));
         $patient->p_address = $request->input('address');
         $patient->h_id = $request->input('h_id');
+        $patient->me_id = $request->input('me_id');
         $patient->p_status = 0;
         $patient->u_id = 1;
 
@@ -96,18 +105,14 @@ class PatientController extends Controller
     }
 
     public function viewpatient(Request $request,$id){
-        $mid = Auth::guard('medic')->user()->m_id;
-        $userinfo = DB::table('medic')
-        ->select('*')
-        ->where('m_id', $mid)
-        ->first();
 
         $patient = Patient::findOrFail($id);
 
         $find = DB::table('patient')
-        ->select('h_name','d_name')
+        ->select('h_name','d_name','me_name','medicine.me_id')
         ->join('hospital', 'hospital.h_id', '=', 'patient.h_id')
         ->join('disease', 'disease.d_id', '=', 'patient.d_id')
+        ->join('medicine', 'medicine.me_id', '=', 'patient.me_id')
         ->where('patient.hn_id', $patient->hn_id)
         ->get();
 
@@ -116,34 +121,36 @@ class PatientController extends Controller
             ->get();
         
         $disease = DB::table('disease')
+            ->select('*')
+            ->get();
+
+        $medicine = DB::table('medicine')
             ->select('*')
             ->get();
 
 
         return view('users.patient.viewpatient',
         compact([
-            'userinfo',
             'patient',
             'find',
             'hpt',
-            'disease'
+            'disease',
+            'medicine',
+
         ]));
 
     }
 
     public function editpatient(Request $request,$id){
-        $mid = Auth::guard('medic')->user()->m_id;
-        $userinfo = DB::table('medic')
-        ->select('*')
-        ->where('m_id', $mid)
-        ->first();
+        
 
         $patient = Patient::findOrFail($id);
 
         $find = DB::table('patient')
-        ->select('h_name','d_name')
+        ->select('h_name','d_name','me_name')
         ->join('hospital', 'hospital.h_id', '=', 'patient.h_id')
         ->join('disease', 'disease.d_id', '=', 'patient.d_id')
+        ->join('medicine', 'medicine.me_id', '=', 'patient.me_id')
         ->where('patient.hn_id', $patient->hn_id)
         ->get();
 
@@ -155,14 +162,18 @@ class PatientController extends Controller
             ->select('*')
             ->get();
 
+        $medicine = DB::table('medicine')
+            ->select('*')
+            ->get();
+
 
         return view('users.patient.editpatient',
         compact([
-            'userinfo',
             'patient',
             'find',
             'hpt',
-            'disease'
+            'disease',
+            'medicine',
         ]));
 
     }
@@ -200,6 +211,7 @@ class PatientController extends Controller
         // $patient->p_passwordcode = Hash::make($request->input('passwordcode'));
         $patient->p_address = $request->input('address');
         $patient->h_id = $request->input('h_id');
+        $patient->me_id = $request->input('me_id');
         $patient->p_status = 0;
         $patient->u_id = 1;
 

@@ -13,20 +13,16 @@ use Illuminate\Support\Str;
 
 class UsermgController extends Controller
 {
+
     public function index(){
-        if(Auth::guard('medic')->check()){
-            $mid = Auth::guard('medic')->user()->m_id;
-            $userinfo = DB::table('medic')
-            ->select('*')
-            ->where('m_id', $mid)
-            ->first();
+        if(Auth::check()){
 
             $user = DB::table('medic')
             ->select('*')
             ->join('hospital', 'hospital.h_id', '=', 'medic.h_id')
             ->get();
             
-            return view('admin.usermanagement.usermanage',compact(['userinfo','user']));
+            return view('admin.usermanagement.usermanage',compact(['user']));
         }else{
             return redirect('login');
         } 
@@ -34,16 +30,11 @@ class UsermgController extends Controller
     }
 
     public function adduser(){
-        $mid = Auth::guard('medic')->user()->m_id;
-        $userinfo = DB::table('medic')
-            ->select('*')
-            ->where('m_id', $mid)
-            ->first();
         $hpt = DB::table('hospital')
             ->select('*')
             ->get();
 
-        return view('admin.usermanagement.adduser',compact(['userinfo','hpt']));
+        return view('admin.usermanagement.adduser',compact(['hpt']));
         
     }
 
@@ -77,11 +68,6 @@ class UsermgController extends Controller
     }
 
     public function edituser(Request $request, $id){
-        $mid = Auth::guard('medic')->user()->m_id;
-        $userinfo = DB::table('medic')
-            ->select('*')
-            ->where('m_id', $mid)
-            ->first();
         $hpt = DB::table('hospital')
             ->select('*')
             ->get();
@@ -97,7 +83,6 @@ class UsermgController extends Controller
 
         return view('admin.usermanagement.edituser',
         compact([
-            'userinfo',
             'hpt',
             'medic',
             'find',

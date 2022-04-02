@@ -13,10 +13,10 @@ class Hospital extends Model
 
     protected $table = 'hospital';
 
-
     protected $fillable = [
         'h_id',
         'h_name',
+        'h_tel',
         'created_at',
         'updated_at',
     ];
